@@ -4,13 +4,12 @@ import "@fortawesome/fontawesome-free/css/all.css";
 import Filter from "./reusable/Filter.js";
 import { Header } from "./reusable/Header.js";
 import { Searchbar } from "./reusable/Searchbar.js";
+import { PreviewDetails } from "./reusable/PreviewDetails.js";
 
 class PeopleSearch extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: this.props.title,
-      images: this.props.images,
       search: "",
       people: [],
       filteredPeople: [],
@@ -31,7 +30,7 @@ class PeopleSearch extends React.Component {
   filterPeople() {
     const activeFilters = this.state.activeFilters;
     const hasActiveGender =
-      Object.values(activeFilters.gender).find(boxChecked => boxChecked) !==
+      Object.values(activeFilters.gender).find(genderName => genderName) !==
       undefined;
     const hasActiveEyeColor =
       Object.values(activeFilters.eye_color).find(boxChecked => boxChecked) !==
@@ -67,11 +66,8 @@ class PeopleSearch extends React.Component {
     });
   }
 
-  toggleFilterClicked(category, option, filmId) {
-    console.log("in togglefilter");
+  toggleFilterClicked(category, option) {
     let activeFilters = { ...this.state.activeFilters[category] };
-
-    //const field = category !== "films" ? option : filmId;
 
     if (activeFilters[option]) {
       activeFilters[option] = false;
@@ -151,6 +147,8 @@ class PeopleSearch extends React.Component {
         people.forEach((person, index) => {
           const speciesId = person.species.split("/species/")[1];
           people[index].species = speciesById[speciesId].name;
+          people[index].age =
+            people[index].age === "" ? "Unknown" : people[index].age;
 
           person.films.forEach((film, i) => {
             const filmId = film.split("/films/")[1];
@@ -191,48 +189,66 @@ class PeopleSearch extends React.Component {
 
   render() {
     console.log(this.state);
-    const { filters, title, search, filteredPeople, images } = this.state;
+    const { filters, search, filteredPeople } = this.state;
     return (
       <div className="container-fluid">
-        <Header title={title} />
+        <Header title={this.props.title} />
         <Searchbar onChangeHandler={this.updateSearch} search={search} />
         <Filter
           filters={filters}
           toggleFilterClicked={this.toggleFilterClicked}
         />
-        <div className="row mt-5">
-          <People people={filteredPeople} images={images} />
+        <div>
+          <People people={filteredPeople} images={this.props.images} />
         </div>
       </div>
     );
   }
 }
 
-const People = props => {
-  return Object.values(props.people).map(person => {
-    const { images } = props;
+const People = ({ people, images }) => {
+  const personAry = Object.values(people).map(person => {
     return <Person person={person} images={images} key={person.id} />;
   });
+
+  return <div className="row mt-5">{personAry}</div>;
 };
 
 class Person extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showDetails: false
+      showDetails: false,
+      dropdownStatus: "d-none",
+      chevronClicked: "fa-chevron-down",
+      borderBottom: "",
+      borderTop: ""
     };
     this.toggleShowDetails = this.toggleShowDetails.bind(this);
   }
 
   toggleShowDetails() {
-    this.setState({
-      showDetails: !this.state.showDetails
-    });
+    if (this.state.showDetails) {
+      this.setState({
+        showDetails: false,
+        dropdownStatus: "d-none",
+        chevronClicked: "fa-chevron-down",
+        borderBottom: "",
+        borderTop: ""
+      });
+    } else {
+      this.setState({
+        showDetails: true,
+        dropdownStatus: "",
+        chevronClicked: "fa-chevron-up",
+        borderBottom: "border-bottom-0",
+        borderTop: "border-top-0"
+      });
+    }
   }
 
   render() {
     console.log(this.props);
-    const { images } = this.props;
     const {
       name,
       id,
@@ -243,47 +259,27 @@ class Person extends React.Component {
       species,
       gender
     } = this.props.person;
-    let dropdownStatus;
-    let chevronClicked;
-    let borderBottom;
-    let borderTop;
-    const nameLowerCase = name.toLowerCase();
-    const determinedAge = age !== "" ? age : "Unavailable";
+    const {
+      dropdownStatus,
+      chevronClicked,
+      borderBottom,
+      borderTop
+    } = this.state;
+    const image = this.props.images[name.toLowerCase()].default;
 
-    if (this.state.showDetails) {
-      dropdownStatus = "";
-      chevronClicked = "fa-chevron-up";
-      borderBottom = "border-bottom-0";
-      borderTop = "border-top-0";
-    } else {
-      dropdownStatus = "d-none";
-      chevronClicked = "fa-chevron-down";
-      borderBottom = "";
-      borderTop = "";
-    }
     return (
       <div className="col-8 offset-2" key={id}>
-        <div
-          className={`${borderBottom} row border pt-2 pb-2 align-items-center`}
-        >
-          <div className="col-1">
-            <img className="people-thumb" src={images[nameLowerCase].default} />
-          </div>
-          <div className="col-8 offset-1 text-center">
-            <p className="people-title">{name}</p>
-          </div>
-          <div className="col-1 offset-1">
-            <i
-              className={`fas ${chevronClicked} people-chevron cursor-pointer-on-hover`}
-              expandkey={id}
-              onClick={this.toggleShowDetails}
-            ></i>
-          </div>
-        </div>
+        <PreviewDetails
+          name={name}
+          borderBottom={borderBottom}
+          image={image}
+          chevronClicked={chevronClicked}
+          onClickHandler={this.toggleShowDetails}
+        />
         <div className={`row ${dropdownStatus + borderTop} border pt-4`}>
           <div className="col">
             <h5 className="underline">Age</h5>
-            <p>{determinedAge}</p>
+            <p>{age}</p>
           </div>
           <div className="col">
             <h5 className="underline">Eye Color</h5>
@@ -310,6 +306,31 @@ class Person extends React.Component {
     );
   }
 }
+
+// const PreviewDetails = ({
+//   name,
+//   borderBottom,
+//   image,
+//   chevronClicked,
+//   onClickHandler
+// }) => {
+//   return (
+//     <div className={`${borderBottom} row border pt-2 pb-2 align-items-center`}>
+//       <div className="col-1">
+//         <img className="people-thumb" src={image} />
+//       </div>
+//       <div className="col-8 offset-1 text-center">
+//         <p className="people-title">{name}</p>
+//       </div>
+//       <div className="col-1 offset-1">
+//         <i
+//           className={`fas ${chevronClicked} people-chevron cursor-pointer-on-hover`}
+//           onClick={onClickHandler}
+//         ></i>
+//       </div>
+//     </div>
+//   );
+// };
 
 const AryToComponentAryTranslator = ({ ary }) => {
   return ary.map(({ name, id }) => {

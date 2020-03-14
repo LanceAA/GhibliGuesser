@@ -39,6 +39,37 @@ export default class Filter extends React.Component {
 
   render() {
     const { tabContainer, tab, tabItem, vectorIcon, menuDisplay } = this.state;
+    let rangeContainer;
+    if (this.props.onChange) {
+      const { minRange, maxRange, onChange } = this.props;
+      rangeContainer = (
+        <div className="col">
+          <p>Release Year:</p>
+          <div className="mb-3">
+            <p>From</p>
+            <input
+              className="form-control"
+              type="number"
+              placeholder="Min"
+              value={minRange}
+              onChange={onChange}
+            />
+          </div>
+          <div className="mb-3">
+            <p>To</p>
+            <input
+              className="form-control"
+              type="number"
+              placeholder="Max"
+              value={maxRange}
+              onChange={onChange}
+            />
+          </div>
+        </div>
+      );
+    } else {
+      rangeContainer = null;
+    }
     return (
       <>
         <div className="row">
@@ -64,6 +95,7 @@ export default class Filter extends React.Component {
                 filters={this.props.filters}
                 clickHandler={this.props.toggleFilterClicked}
               />
+              {rangeContainer}
             </div>
           </div>
         </div>
@@ -75,7 +107,7 @@ export default class Filter extends React.Component {
 const FilterOptions = ({ filters, clickHandler }) => {
   return Object.entries(filters).map(([rawCategory, { list, title }]) => {
     return (
-      <div key={title} className="col-3">
+      <div key={title} className="col">
         <div>
           <div>
             <p>{title}:</p>

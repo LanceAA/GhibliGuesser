@@ -1,6 +1,5 @@
 //dark mode
-//save to github
-//design search page
+//debounce for search and release year inputs
 
 import "./style.sass";
 import "bootstrap/dist/css/bootstrap.min.css";
