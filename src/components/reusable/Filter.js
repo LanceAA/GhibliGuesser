@@ -7,7 +7,7 @@ export default class Filter extends React.Component {
     this.state = {
       showMenu: false,
       vectorIcon: "fa-angle-down",
-      menuDisplay: "d-none",
+      menuDisplay: "filter-menu-hidden",
       tabContainer: "tab-container",
       tab: "tab",
       tabItem: "tab-item"
@@ -19,16 +19,17 @@ export default class Filter extends React.Component {
     if (this.state.showMenu) {
       this.setState({
         vectorIcon: "fa-angle-down",
-        menuDisplay: "d-none",
+        menuDisplay: "filter-menu-hidden",
         tabContainer: "tab-container",
         tab: "tab",
         tabItem: "tab-item",
+
         showMenu: false
       });
     } else {
       this.setState({
         vectorIcon: "fa-angle-up",
-        menuDisplay: "",
+        menuDisplay: "filter-menu",
         tabContainer: "tab-container-active",
         tab: "tab",
         tabItem: "tab-item-active",
@@ -39,37 +40,6 @@ export default class Filter extends React.Component {
 
   render() {
     const { tabContainer, tab, tabItem, vectorIcon, menuDisplay } = this.state;
-    let rangeContainer;
-    if (this.props.onChange) {
-      const { minRange, maxRange, onChange } = this.props;
-      rangeContainer = (
-        <div className="col">
-          <p>Release Year:</p>
-          <div className="mb-3">
-            <p>From</p>
-            <input
-              className="form-control"
-              type="number"
-              placeholder="Min"
-              value={minRange}
-              onChange={onChange}
-            />
-          </div>
-          <div className="mb-3">
-            <p>To</p>
-            <input
-              className="form-control"
-              type="number"
-              placeholder="Max"
-              value={maxRange}
-              onChange={onChange}
-            />
-          </div>
-        </div>
-      );
-    } else {
-      rangeContainer = null;
-    }
     return (
       <>
         <div className="row">
@@ -95,7 +65,7 @@ export default class Filter extends React.Component {
                 filters={this.props.filters}
                 clickHandler={this.props.toggleFilterClicked}
               />
-              {rangeContainer}
+              {this.props.children}
             </div>
           </div>
         </div>

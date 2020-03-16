@@ -13,10 +13,10 @@ export const CharacterThumbnails = ({ people, images }) => {
         </div>
       );
     });
-    return <div className="row mb-2">{peopleAry}</div>;
+    return <div className="faux-row-margin">{peopleAry}</div>;
   } else {
     return (
-      <div className="row mb-2">
+      <div className="faux-row-margin">
         <p className="ml-3">Not Available</p>
       </div>
     );

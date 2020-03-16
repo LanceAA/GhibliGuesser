@@ -8,7 +8,10 @@ export const PreviewDetails = ({
   onClickHandler
 }) => {
   return (
-    <div className={`${borderBottom} row border pt-2 pb-2 align-items-center`}>
+    <div
+      className={`${borderBottom} row border pt-2 pb-2 align-items-center dim-on-hover cursor-pointer-on-hover`}
+      onClick={onClickHandler}
+    >
       <div className="col-1">
         <img className="people-thumb" src={image} />
       </div>
@@ -18,7 +21,6 @@ export const PreviewDetails = ({
       <div className="col-1 offset-1">
         <i
           className={`fas ${chevronClicked} people-chevron cursor-pointer-on-hover`}
-          onClick={onClickHandler}
         ></i>
       </div>
     </div>

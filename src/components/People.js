@@ -198,9 +198,7 @@ class PeopleSearch extends React.Component {
           filters={filters}
           toggleFilterClicked={this.toggleFilterClicked}
         />
-        <div>
-          <People people={filteredPeople} images={this.props.images} />
-        </div>
+        <People people={filteredPeople} images={this.props.images} />
       </div>
     );
   }
@@ -211,7 +209,11 @@ const People = ({ people, images }) => {
     return <Person person={person} images={images} key={person.id} />;
   });
 
-  return <div className="row mt-5">{personAry}</div>;
+  return (
+    <div id="table-container" className="row mt-5">
+      {personAry}
+    </div>
+  );
 };
 
 class Person extends React.Component {
@@ -219,10 +221,9 @@ class Person extends React.Component {
     super(props);
     this.state = {
       showDetails: false,
-      dropdownStatus: "d-none",
       chevronClicked: "fa-chevron-down",
-      borderBottom: "",
-      borderTop: ""
+      borderBottom: "border-bottom-delay",
+      detailContainer: "detail-container-hidden"
     };
     this.toggleShowDetails = this.toggleShowDetails.bind(this);
   }
@@ -231,18 +232,16 @@ class Person extends React.Component {
     if (this.state.showDetails) {
       this.setState({
         showDetails: false,
-        dropdownStatus: "d-none",
         chevronClicked: "fa-chevron-down",
-        borderBottom: "",
-        borderTop: ""
+        borderBottom: "border-bottom-delay",
+        detailContainer: "detail-container-hidden"
       });
     } else {
       this.setState({
         showDetails: true,
-        dropdownStatus: "",
         chevronClicked: "fa-chevron-up",
         borderBottom: "border-bottom-0",
-        borderTop: "border-top-0"
+        detailContainer: "detail-container"
       });
     }
   }
@@ -259,50 +258,51 @@ class Person extends React.Component {
       species,
       gender
     } = this.props.person;
-    const {
-      dropdownStatus,
-      chevronClicked,
-      borderBottom,
-      borderTop
-    } = this.state;
+    const { chevronClicked, borderBottom, detailContainer } = this.state;
     const image = this.props.images[name.toLowerCase()].default;
 
     return (
-      <div className="col-8 offset-2" key={id}>
-        <PreviewDetails
-          name={name}
-          borderBottom={borderBottom}
-          image={image}
-          chevronClicked={chevronClicked}
-          onClickHandler={this.toggleShowDetails}
-        />
-        <div className={`row ${dropdownStatus + borderTop} border pt-4`}>
-          <div className="col">
-            <h5 className="underline">Age</h5>
-            <p>{age}</p>
-          </div>
-          <div className="col">
-            <h5 className="underline">Eye Color</h5>
-            <p>{eye_color}</p>
-          </div>
-          <div className="col">
-            <h5 className="underline">Hair Color</h5>
-            <p>{hair_color}</p>
-          </div>
-          <div className="col">
-            <h5 className="underline">Species</h5>
-            <p>{species}</p>
-          </div>
-          <div className="col">
-            <h5 className="underline">Films</h5>
-            <AryToComponentAryTranslator ary={films} />
-          </div>
-          <div className="col">
-            <h5 className="underline">Gender</h5>
-            <p>{gender}</p>
+      <React.Fragment>
+        <div className="col-8 offset-2" key={id}>
+          <PreviewDetails
+            name={name}
+            borderBottom={borderBottom}
+            image={image}
+            chevronClicked={chevronClicked}
+            onClickHandler={this.toggleShowDetails}
+          />
+        </div>
+        <div
+          className={`${detailContainer} faux-row-margin pl-3 pr-3 col-8 offset-2`}
+        >
+          <div className="row">
+            <div className="col">
+              <h5 className="underline">Age</h5>
+              <p>{age}</p>
+            </div>
+            <div className="col">
+              <h5 className="underline">Eye Color</h5>
+              <p>{eye_color}</p>
+            </div>
+            <div className="col">
+              <h5 className="underline">Hair Color</h5>
+              <p>{hair_color}</p>
+            </div>
+            <div className="col">
+              <h5 className="underline">Species</h5>
+              <p>{species}</p>
+            </div>
+            <div className="col">
+              <h5 className="underline">Films</h5>
+              <AryToComponentAryTranslator ary={films} />
+            </div>
+            <div className="col">
+              <h5 className="underline">Gender</h5>
+              <p>{gender}</p>
+            </div>
           </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 }

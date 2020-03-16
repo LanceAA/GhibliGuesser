@@ -180,18 +180,38 @@ export default class FilmSearch extends React.Component {
   }
 
   render() {
-    const { search, filters, filteredFilms } = this.state;
+    const { search, filters, filteredFilms, minRange, maxRange } = this.state;
     const { images, title, peopleImages } = this.props;
     console.log(this.state);
     return (
       <div className="container-fluid">
         <Header title={title} />
         <Searchbar search={search} onChangeHandler={this.updateSearch} />
-        <Filter
-          filters={filters}
-          toggleFilterClicked={this.toggleFilterClicked}
-          onChange={this.updateRange}
-        />
+        <Filter filters={filters}>
+          <div className="col">
+            <p>Release Year:</p>
+            <div className="mb-3">
+              <p>From</p>
+              <input
+                className="form-control"
+                type="number"
+                placeholder="Min"
+                value={minRange}
+                onChange={this.updateRange}
+              />
+            </div>
+            <div className="mb-3">
+              <p>To</p>
+              <input
+                className="form-control"
+                type="number"
+                placeholder="Max"
+                value={maxRange}
+                onChange={this.updateRange}
+              />
+            </div>
+          </div>
+        </Filter>
         <Films
           images={images}
           films={filteredFilms}
@@ -214,7 +234,11 @@ const Films = ({ films, images, peopleImages }) => {
     );
   });
 
-  return <div className="row mt-5">{filmAry}</div>;
+  return (
+    <div id="table-container" className="row mt-5">
+      {filmAry}
+    </div>
+  );
 };
 
 class Film extends React.Component {
@@ -222,10 +246,9 @@ class Film extends React.Component {
     super(props);
     this.state = {
       showDetails: false,
-      dropdownStatus: "d-none",
       chevronClicked: "fa-chevron-down",
-      borderBottom: "",
-      borderTop: ""
+      borderBottom: "border-bottom-delay",
+      detailContainer: "detail-container-hidden"
     };
     this.toggleShowDetails = this.toggleShowDetails.bind(this);
   }
@@ -234,18 +257,16 @@ class Film extends React.Component {
     if (this.state.showDetails) {
       this.setState({
         showDetails: false,
-        dropdownStatus: "d-none",
         chevronClicked: "fa-chevron-down",
-        borderBottom: "",
-        borderTop: ""
+        borderBottom: "border-bottom-delay",
+        detailContainer: "detail-container-hidden"
       });
     } else {
       this.setState({
         showDetails: true,
-        dropdownStatus: "",
         chevronClicked: "fa-chevron-up",
         borderBottom: "border-bottom-0",
-        borderTop: "border-top-0"
+        detailContainer: "detail-container"
       });
     }
   }
@@ -263,64 +284,101 @@ class Film extends React.Component {
       people,
       id
     } = this.props.film;
-    const {
-      dropdownStatus,
-      chevronClicked,
-      borderBottom,
-      borderTop
-    } = this.state;
+    const { chevronClicked, borderBottom, detailContainer } = this.state;
     const image = images[title].default;
 
     return (
-      <div className="col-8 offset-2" key={id}>
-        <PreviewDetails
-          name={title}
-          borderBottom={borderBottom}
-          image={image}
-          chevronClicked={chevronClicked}
-          onClickHandler={this.toggleShowDetails}
-        />
+      <React.Fragment>
+        <div className="col-8 offset-2" key={id}>
+          <PreviewDetails
+            name={title}
+            borderBottom={borderBottom}
+            image={image}
+            chevronClicked={chevronClicked}
+            onClickHandler={this.toggleShowDetails}
+          />
+        </div>
         <div
-          className={`row ${dropdownStatus + borderTop} border pt-4 pl-3 pr-3`}
+          className={`${detailContainer} faux-row-margin pl-3 pr-3 col-8 offset-2`}
         >
-          <div className="col">
-            <div className="row">
-              <div className="col mb-2">
-                <h5 className="underline">Description</h5>
-                <p>{description}</p>
-              </div>
+          <div className="row mb-2">
+            <div className="col">
+              <h5 className="underline">Description</h5>
+              <p>{description}</p>
             </div>
           </div>
-          <div className="col">
-            <div className="row w-100 mb-2">
-              <div className="col">
-                <h5 className="underline">Director</h5>
-                <p>{director}</p>
-              </div>
-              <div className="col">
-                <h5 className="underline">Producer</h5>
-                <p>{producer}</p>
-              </div>
-              <div className="col">
-                <h5 className="underline">Release Date</h5>
-                <p>{release_date}</p>
-              </div>
-              <div className="col">
-                <h5 className="underline">Score</h5>
-                <p>{rt_score}</p>
-              </div>
+          <div className="row mb-2">
+            <div className="col">
+              <h5 className="underline">Director</h5>
+              <p>{director}</p>
+            </div>
+            <div className="col">
+              <h5 className="underline">Producer</h5>
+              <p>{producer}</p>
+            </div>
+            <div className="col">
+              <h5 className="underline">Release Date</h5>
+              <p>{release_date}</p>
+            </div>
+            <div className="col">
+              <h5 className="underline">Score</h5>
+              <p>{rt_score}</p>
             </div>
           </div>
-          <div className="col">
-            <div className="row">
-              <div className="col">
-                <h5 className="underline">People</h5>
-                <CharacterThumbnails people={people} images={peopleImages} />
-              </div>
+          <div className="row mb-2">
+            <div className="col">
+              <h5 className="underline">People</h5>
+              <CharacterThumbnails people={people} images={peopleImages} />
             </div>
           </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
+}
+
+{
+  /* <div className="col-8 offset-2" key={id}>
+  <PreviewDetails
+    name={title}
+    borderBottom={borderBottom}
+    image={image}
+    chevronClicked={chevronClicked}
+    onClickHandler={this.toggleShowDetails}
+  />
+  <div className={`${detailContainer} faux-row-margin pl-3 pr-3`}>
+    <div className={tableDropdownContent}>
+      <div className="row">
+        <div className="col mb-2">
+          <h5 className="underline">Description</h5>
+          <p>{description}</p>
+        </div>
+      </div>
+      <div className="row w-100 mb-2">
+        <div className="col">
+          <h5 className="underline">Director</h5>
+          <p>{director}</p>
+        </div>
+        <div className="col">
+          <h5 className="underline">Producer</h5>
+          <p>{producer}</p>
+        </div>
+        <div className="col">
+          <h5 className="underline">Release Date</h5>
+          <p>{release_date}</p>
+        </div>
+        <div className="col">
+          <h5 className="underline">Score</h5>
+          <p>{rt_score}</p>
+        </div>
+      </div>
+      <div className="row">
+        <div className="col">
+          <h5 className="underline">People</h5>
+          <CharacterThumbnails people={people} images={peopleImages} />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>; */
 }
