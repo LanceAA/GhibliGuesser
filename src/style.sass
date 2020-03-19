@@ -1,10 +1,17 @@
 @import "../node_modules/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css"
+
+html, body, #root, .container-fluid
+  min-height: 100vh
   
-html, body, #root, .container-fluid, #table-container
-  height: 100%
+input[type='number']
+  -moz-appearance: textfield
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button
+  -webkit-appearance: none
   
 #background-top
-  background-color: #ac40ca
+  background-color: #9e4dcd
   height: 447.5px
 
 #description-card
@@ -40,8 +47,17 @@ html, body, #root, .container-fluid, #table-container
     text-decoration: none
     color: #3c3c3c
 
-#searchbar-icon
-  font-size: 1.4rem
+#searchbar, 
+#max-input, 
+#min-input
+  background-color: #242729
+  border-color: #bbc0c4
+  color: #bbc0c4
+  border-width: 0px 0px 1px 0px
+  border-radius: 0
+
+// #searchbar-icon
+//   font-size: 1.4rem
 
 #filter-text
   font-size: 1.1rem
@@ -87,7 +103,7 @@ html, body, #root, .container-fluid, #table-container
   margin-bottom: -1px
 
 #tab-item-active
-  border-color: #dee2e6 #dee2e6 #fff
+  border-color: #bbc0c4 #bbc0c4 #242729
   border-width: 1px
   border-style: solid
   border-top-left-radius: .25rem
@@ -128,20 +144,22 @@ html, body, #root, .container-fluid, #table-container
   overflow: hidden
   padding-top: 1.5rem
   z-index: 1
-  max-height: 100%
+  max-height: 200000px
   border-width: 0px 1px 1px 1px
   border-style: solid
   border-color: #dee2e6
-  transition: max-height 0.5s, padding 0.5s //0.7s
+  transition: max-height 1s ease, padding 0.5s ease //0.7s
+  background: #fbfbfb
 
 .detail-container-hidden
   z-index: -1
   max-height: 0px
-  transition: max-height 0.4s, padding 0.4s //0.5s
+  transition: max-height 0.4s ease, padding 0.4s ease //0.5s
   border-width: 0px 1px 1px 1px
   border-style: solid
   border-color: #dee2e6
   overflow: hidden
+  background: #fbfbfb
 
 .border-bottom-delay
   transition: border-bottom 0s 0.5s
@@ -149,3 +167,37 @@ html, body, #root, .container-fluid, #table-container
 .dim-on-hover
   &:hover
     background-color: #f9f8f8
+
+.theme-dark-bg
+  background-color: #242729
+
+.theme-dark-color
+  color: #bbc0c4
+
+div > .btn-outline-theme-dark
+  color: #c2cbd3
+  border-color: #6c757d
+  background-color: transparent
+
+div > .btn-outline-theme-dark:hover
+  background-color: #3b4045
+  color: white
+
+#head
+  flex: 0 1 auto
+
+#body-content
+  flex: 1 1 auto
+
+#foot
+  flex: 0 1 auto
+
+#master-container
+  display: flex
+  flex-flow: column
+
+#no-match-icon
+  font-size: 13rem
+
+#no-match-text
+  font-size: 3rem

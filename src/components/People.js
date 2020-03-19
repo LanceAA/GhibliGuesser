@@ -5,6 +5,9 @@ import Filter from "./reusable/Filter.js";
 import { Header } from "./reusable/Header.js";
 import { Searchbar } from "./reusable/Searchbar.js";
 import { PreviewDetails } from "./reusable/PreviewDetails.js";
+import { AryToComponentAryTranslator } from "./reusable/AryToComponentAryTranslator.js";
+import { Footer } from "./reusable/Footer.js";
+import { NoContent } from "./reusable/NoContent.js";
 
 class PeopleSearch extends React.Component {
   constructor(props) {
@@ -25,6 +28,13 @@ class PeopleSearch extends React.Component {
     this.toggleFilterClicked = this.toggleFilterClicked.bind(this);
     this.filterPeople = this.filterPeople.bind(this);
     this.updateSearch = this.updateSearch.bind(this);
+    this.debounce = this.debounce.bind(this);
+    this.timer;
+  }
+
+  debounce() {
+    clearTimeout(this.timer);
+    this.timer = setTimeout(this.filterPeople, 400);
   }
 
   filterPeople() {
@@ -87,17 +97,12 @@ class PeopleSearch extends React.Component {
   }
 
   updateSearch({ target }) {
-    console.log(target.value);
     this.setState(
       {
         search: target.value
       },
-      this.filterPeople
+      this.debounce
     );
-  }
-
-  componentWillUnmount() {
-    console.log("unmounting");
   }
 
   componentDidMount() {
@@ -190,15 +195,29 @@ class PeopleSearch extends React.Component {
   render() {
     console.log(this.state);
     const { filters, search, filteredPeople } = this.state;
+    const { title, images } = this.props;
+
+    const table =
+      filteredPeople.length > 0 ? (
+        <People people={filteredPeople} images={images} />
+      ) : (
+        <NoContent />
+      );
+
     return (
       <div className="container-fluid">
-        <Header title={this.props.title} />
-        <Searchbar onChangeHandler={this.updateSearch} search={search} />
-        <Filter
-          filters={filters}
-          toggleFilterClicked={this.toggleFilterClicked}
-        />
-        <People people={filteredPeople} images={this.props.images} />
+        <div id="head">
+          <Header title={title} />
+          <Searchbar onChangeHandler={this.updateSearch} search={search} />
+          <Filter
+            filters={filters}
+            toggleFilterClicked={this.toggleFilterClicked}
+          />
+        </div>
+        <div id="body-content" className="mt-5 mb-5">
+          {table}
+        </div>
+        <Footer />
       </div>
     );
   }
@@ -209,11 +228,7 @@ const People = ({ people, images }) => {
     return <Person person={person} images={images} key={person.id} />;
   });
 
-  return (
-    <div id="table-container" className="row mt-5">
-      {personAry}
-    </div>
-  );
+  return <div className="faux-row-margin">{personAry}</div>;
 };
 
 class Person extends React.Component {
@@ -306,36 +321,5 @@ class Person extends React.Component {
     );
   }
 }
-
-// const PreviewDetails = ({
-//   name,
-//   borderBottom,
-//   image,
-//   chevronClicked,
-//   onClickHandler
-// }) => {
-//   return (
-//     <div className={`${borderBottom} row border pt-2 pb-2 align-items-center`}>
-//       <div className="col-1">
-//         <img className="people-thumb" src={image} />
-//       </div>
-//       <div className="col-8 offset-1 text-center">
-//         <p className="people-title">{name}</p>
-//       </div>
-//       <div className="col-1 offset-1">
-//         <i
-//           className={`fas ${chevronClicked} people-chevron cursor-pointer-on-hover`}
-//           onClick={onClickHandler}
-//         ></i>
-//       </div>
-//     </div>
-//   );
-// };
-
-const AryToComponentAryTranslator = ({ ary }) => {
-  return ary.map(({ name, id }) => {
-    return <p key={id}>{name}</p>;
-  });
-};
 
 export const SearchPageWithRouter = withRouter(PeopleSearch);

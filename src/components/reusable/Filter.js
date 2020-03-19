@@ -41,13 +41,13 @@ export default class Filter extends React.Component {
   render() {
     const { tabContainer, tab, tabItem, vectorIcon, menuDisplay } = this.state;
     return (
-      <>
-        <div className="row">
+      <div className="pb-3 theme-dark-bg faux-row-margin">
+        <div className="row w-100">
           <div id={tabContainer} className="col-6 offset-3 pl-0">
             <div id={tab}>
               <div
                 id={tabItem}
-                className="d-inline-block cursor-pointer-on-hover"
+                className="d-inline-block cursor-pointer-on-hover theme-dark-color"
                 onClick={this.toggleMenu}
               >
                 <p id="filter-text" className="ml-1 d-inline mr-2 no-select">
@@ -59,7 +59,7 @@ export default class Filter extends React.Component {
           </div>
         </div>
         <div className={`row position-absolute w-100 ${menuDisplay}`}>
-          <div className="col-6 offset-3 large-z-index bg-white">
+          <div className="col-6 offset-3 large-z-index theme-dark-bg">
             <div id="tabContent" className="row p-1">
               <FilterOptions
                 filters={this.props.filters}
@@ -69,7 +69,7 @@ export default class Filter extends React.Component {
             </div>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 }
@@ -80,7 +80,7 @@ const FilterOptions = ({ filters, clickHandler }) => {
       <div key={title} className="col">
         <div>
           <div>
-            <p>{title}:</p>
+            <p className="theme-dark-color">{title}:</p>
           </div>
           <div>
             <ul className="list-unstyled">
@@ -99,20 +99,6 @@ const FilterOptions = ({ filters, clickHandler }) => {
 
 const FilterOption = ({ options, rawCategory, clickHandler }) => {
   return options.map(({ name, id }) => {
-    // if (rawCategory === "films") {
-    //   return (
-    //     <li key={id}>
-    //       <div className="form-check abc-checkbox abc-checkbox-primary">
-    //         <input
-    //           id={id}
-    //           type="checkbox"
-    //           onClick={() => clickHandler(rawCategory, name, id)}
-    //         />
-    //         <label htmlFor={id}>{name}</label>
-    //       </div>
-    //     </li>
-    //   );
-    // } else {
     return (
       <li key={id}>
         <div className="form-check abc-checkbox abc-checkbox-primary">
@@ -121,10 +107,11 @@ const FilterOption = ({ options, rawCategory, clickHandler }) => {
             type="checkbox"
             onClick={() => clickHandler(rawCategory, name)}
           />
-          <label htmlFor={id}>{name}</label>
+          <label htmlFor={id} className="theme-dark-color">
+            {name}
+          </label>
         </div>
       </li>
     );
-    //}
   });
 };

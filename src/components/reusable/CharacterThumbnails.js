@@ -4,7 +4,7 @@ export const CharacterThumbnails = ({ people, images }) => {
   if (people.length > 0) {
     const peopleAry = people.map(person => {
       return (
-        <div className="ml-3" key={person.name}>
+        <div className="ml-3 d-inline-block" key={person.name}>
           <img
             className="character-thumb"
             src={images[person.name.toLowerCase()].default}

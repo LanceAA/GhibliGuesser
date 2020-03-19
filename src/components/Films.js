@@ -4,6 +4,8 @@ import { Searchbar } from "./reusable/Searchbar.js";
 import Filter from "./reusable/Filter.js";
 import { PreviewDetails } from "./reusable/PreviewDetails.js";
 import { CharacterThumbnails } from "./reusable/CharacterThumbnails.js";
+import { Footer } from "./reusable/Footer.js";
+import { NoContent } from "./reusable/NoContent.js";
 
 export default class FilmSearch extends React.Component {
   constructor(props) {
@@ -23,6 +25,14 @@ export default class FilmSearch extends React.Component {
     this.updateSearch = this.updateSearch.bind(this);
     this.toggleFilterClicked = this.toggleFilterClicked.bind(this);
     this.updateRange = this.updateRange.bind(this);
+    this.filterFilms = this.filterFilms.bind(this);
+    this.debounce = this.debounce.bind(this);
+    this.timer;
+  }
+
+  debounce() {
+    clearTimeout(this.timer);
+    this.timer = setTimeout(this.filterFilms, 400);
   }
 
   filterFilms() {
@@ -66,14 +76,14 @@ export default class FilmSearch extends React.Component {
         {
           minRange: target.value
         },
-        this.filterFilms
+        this.debounce
       );
     } else if (target.placeholder === "Max") {
       this.setState(
         {
           maxRange: target.value
         },
-        this.filterFilms
+        this.debounce
       );
     } else {
       console.error("Incorrect element hit updateRange");
@@ -101,12 +111,11 @@ export default class FilmSearch extends React.Component {
   }
 
   updateSearch({ target }) {
-    console.log(target.value);
     this.setState(
       {
         search: target.value
       },
-      this.filterFilms
+      this.debounce
     );
   }
 
@@ -183,40 +192,58 @@ export default class FilmSearch extends React.Component {
     const { search, filters, filteredFilms, minRange, maxRange } = this.state;
     const { images, title, peopleImages } = this.props;
     console.log(this.state);
-    return (
-      <div className="container-fluid">
-        <Header title={title} />
-        <Searchbar search={search} onChangeHandler={this.updateSearch} />
-        <Filter filters={filters}>
-          <div className="col">
-            <p>Release Year:</p>
-            <div className="mb-3">
-              <p>From</p>
-              <input
-                className="form-control"
-                type="number"
-                placeholder="Min"
-                value={minRange}
-                onChange={this.updateRange}
-              />
-            </div>
-            <div className="mb-3">
-              <p>To</p>
-              <input
-                className="form-control"
-                type="number"
-                placeholder="Max"
-                value={maxRange}
-                onChange={this.updateRange}
-              />
-            </div>
-          </div>
-        </Filter>
+
+    const table =
+      filteredFilms.length > 0 ? (
         <Films
           images={images}
           films={filteredFilms}
           peopleImages={peopleImages}
         />
+      ) : (
+        <NoContent />
+      );
+
+    return (
+      <div id="master-container" className="container-fluid">
+        <div id="header">
+          <Header title={title} />
+          <Searchbar search={search} onChangeHandler={this.updateSearch} />
+          <Filter
+            filters={filters}
+            toggleFilterClicked={this.toggleFilterClicked}
+          >
+            <div className="col">
+              <p className="theme-dark-color">Release Year:</p>
+              <div className="mb-3 theme-dark-color">
+                <p>From</p>
+                <input
+                  id="min-input"
+                  className="form-control"
+                  type="number"
+                  placeholder="Min"
+                  value={minRange}
+                  onChange={this.updateRange}
+                />
+              </div>
+              <div className="mb-3 theme-dark-color">
+                <p>To</p>
+                <input
+                  id="max-input"
+                  className="form-control"
+                  type="number"
+                  placeholder="Max"
+                  value={maxRange}
+                  onChange={this.updateRange}
+                />
+              </div>
+            </div>
+          </Filter>
+        </div>
+        <div id="body-content" className="mt-5 mb-5">
+          {table}
+        </div>
+        <Footer />
       </div>
     );
   }
@@ -234,11 +261,7 @@ const Films = ({ films, images, peopleImages }) => {
     );
   });
 
-  return (
-    <div id="table-container" className="row mt-5">
-      {filmAry}
-    </div>
-  );
+  return <div className="faux-row-margin">{filmAry}</div>;
 };
 
 class Film extends React.Component {
@@ -335,50 +358,4 @@ class Film extends React.Component {
       </React.Fragment>
     );
   }
-}
-
-{
-  /* <div className="col-8 offset-2" key={id}>
-  <PreviewDetails
-    name={title}
-    borderBottom={borderBottom}
-    image={image}
-    chevronClicked={chevronClicked}
-    onClickHandler={this.toggleShowDetails}
-  />
-  <div className={`${detailContainer} faux-row-margin pl-3 pr-3`}>
-    <div className={tableDropdownContent}>
-      <div className="row">
-        <div className="col mb-2">
-          <h5 className="underline">Description</h5>
-          <p>{description}</p>
-        </div>
-      </div>
-      <div className="row w-100 mb-2">
-        <div className="col">
-          <h5 className="underline">Director</h5>
-          <p>{director}</p>
-        </div>
-        <div className="col">
-          <h5 className="underline">Producer</h5>
-          <p>{producer}</p>
-        </div>
-        <div className="col">
-          <h5 className="underline">Release Date</h5>
-          <p>{release_date}</p>
-        </div>
-        <div className="col">
-          <h5 className="underline">Score</h5>
-          <p>{rt_score}</p>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col">
-          <h5 className="underline">People</h5>
-          <CharacterThumbnails people={people} images={peopleImages} />
-        </div>
-      </div>
-    </div>
-  </div>
-</div>; */
 }

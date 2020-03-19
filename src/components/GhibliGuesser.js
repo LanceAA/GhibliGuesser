@@ -3,6 +3,8 @@ import Home from "./Home";
 import { SearchPageWithRouter } from "./People";
 import { Switch, Route } from "react-router-dom";
 import FilmSearch from "./Films.js";
+import LocationSearch from "./Locations.js";
+import SpeciesSearch from "./Species.js";
 
 function importAll(r) {
   let images = {};
@@ -18,6 +20,14 @@ const peopleImages = importAll(
 
 const filmImages = importAll(
   require.context("../assets/films", false, /\.(png|jpe?g|svg)$/)
+);
+
+const locationImages = importAll(
+  require.context("../assets/locations", false, /\.(png|jpe?g|svg)$/)
+);
+
+const speciesImages = importAll(
+  require.context("../assets/species", false, /\.(png|jpe?g|svg)$/)
 );
 
 export default class GhibliGuesser extends React.Component {
@@ -48,10 +58,18 @@ export default class GhibliGuesser extends React.Component {
           />
         </Route>
         <Route path="/locations">
-          <SearchPageWithRouter />
+          <LocationSearch
+            title="Locations"
+            images={locationImages}
+            peopleImages={peopleImages}
+          />
         </Route>
         <Route path="/species">
-          <SearchPageWithRouter />
+          <SpeciesSearch
+            title="Species"
+            images={speciesImages}
+            peopleImages={peopleImages}
+          />
         </Route>
         <Route exact path="/">
           <Home />

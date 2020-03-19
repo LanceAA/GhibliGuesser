@@ -33,13 +33,8 @@ export default class Home extends React.Component {
         }
       }
     };
-    this.checkChecked = this.checkChecked.bind(this);
     this.test = this.test.bind(this);
     this.testExit = this.testExit.bind(this);
-  }
-
-  checkChecked(e) {
-    console.log(e.target.checked);
   }
 
   test({ target }) {
@@ -172,9 +167,6 @@ export default class Home extends React.Component {
               </div>
             </div>
           </div>
-        </div>
-        <div>
-          <input type="checkbox" onClick={this.checkChecked}></input>
         </div>
       </>
     );
