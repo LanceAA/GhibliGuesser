@@ -1,15 +1,15 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export const CharacterThumbnails = ({ people, images }) => {
   if (people.length > 0) {
     const peopleAry = people.map(person => {
+      const image = images[person.name.toLowerCase()].default;
       return (
         <div className="ml-3 d-inline-block" key={person.name}>
-          <img
-            className="character-thumb"
-            src={images[person.name.toLowerCase()].default}
-            title={person.name}
-          />
+          <Link to={`/people/${person.id}`}>
+            <img className="character-thumb" src={image} title={person.name} />
+          </Link>
         </div>
       );
     });

@@ -1,11 +1,12 @@
 import React from "react";
-import { Header } from "./reusable/Header.js";
-import { Searchbar } from "./reusable/Searchbar.js";
-import Filter from "./reusable/Filter.js";
+import Table from "./reusable/Table.js";
 import { PreviewDetails } from "./reusable/PreviewDetails.js";
 import { CharacterThumbnails } from "./reusable/CharacterThumbnails.js";
 import { Footer } from "./reusable/Footer.js";
 import { NoContent } from "./reusable/NoContent.js";
+import { Loading } from "./reusable/Loading.js";
+import girl from "../assets/girl.png";
+import { Head } from "./reusable/Head.js";
 
 export default class FilmSearch extends React.Component {
   constructor(props) {
@@ -13,7 +14,6 @@ export default class FilmSearch extends React.Component {
     this.state = {
       search: "",
       films: [],
-      filteredFilms: [],
       filters: {},
       activeFilters: {
         director: {},
@@ -42,24 +42,26 @@ export default class FilmSearch extends React.Component {
         ? Number(this.state.maxRange)
         : Number.MAX_VALUE;
     const minRange = Number(this.state.minRange);
-    const hasActiveDirector =
+    const actFilHasDirector =
       Object.values(activeFilters.director).find(
         directorName => directorName
       ) !== undefined;
-    const hasActiveProducer =
+    const actFilHasProducer =
       Object.values(activeFilters.producer).find(
         producerName => producerName
       ) !== undefined;
 
     const filteredFilms = this.state.films.filter(film => {
-      const releaseYear = +film.release_date;
+      const directorIsActive = activeFilters.director[film.director];
+      const producerIsActive = activeFilters.producer[film.producer];
+      const releaseYear = Number(film.release_date);
       const withinRange = minRange <= releaseYear && releaseYear <= maxRange;
       const nameMatchesSearch =
         film.title.toLowerCase().indexOf(this.state.search.toLowerCase()) === 0;
 
       return (
-        (activeFilters.director[film.director] || !hasActiveDirector) &&
-        (activeFilters.producer[film.producer] || !hasActiveProducer) &&
+        (directorIsActive || !actFilHasDirector) &&
+        (producerIsActive || !actFilHasProducer) &&
         (nameMatchesSearch || this.state.search === "") &&
         withinRange
       );
@@ -189,59 +191,65 @@ export default class FilmSearch extends React.Component {
   }
 
   render() {
-    const { search, filters, filteredFilms, minRange, maxRange } = this.state;
+    const { search, filters, minRange, maxRange } = this.state;
     const { images, title, peopleImages } = this.props;
     console.log(this.state);
+    let bodyContent;
 
-    const table =
-      filteredFilms.length > 0 ? (
-        <Films
-          images={images}
-          films={filteredFilms}
-          peopleImages={peopleImages}
-        />
-      ) : (
-        <NoContent />
-      );
+    if (this.state.filteredFilms) {
+      if (this.state.filteredFilms.length > 0) {
+        bodyContent = (
+          <Films
+            images={images}
+            films={this.state.filteredFilms}
+            peopleImages={peopleImages}
+          />
+        );
+      } else {
+        bodyContent = <NoContent />;
+      }
+    } else {
+      bodyContent = <Loading />;
+    }
 
     return (
       <div id="master-container" className="container-fluid">
-        <div id="header">
-          <Header title={title} />
-          <Searchbar search={search} onChangeHandler={this.updateSearch} />
-          <Filter
-            filters={filters}
-            toggleFilterClicked={this.toggleFilterClicked}
-          >
-            <div className="col">
-              <p className="theme-dark-color">Release Year:</p>
-              <div className="mb-3 theme-dark-color">
-                <p>From</p>
-                <input
-                  id="min-input"
-                  className="form-control"
-                  type="number"
-                  placeholder="Min"
-                  value={minRange}
-                  onChange={this.updateRange}
-                />
-              </div>
-              <div className="mb-3 theme-dark-color">
-                <p>To</p>
-                <input
-                  id="max-input"
-                  className="form-control"
-                  type="number"
-                  placeholder="Max"
-                  value={maxRange}
-                  onChange={this.updateRange}
-                />
-              </div>
+        <Head
+          title={title}
+          search={search}
+          updateSearch={this.updateSearch}
+          filters={filters}
+          toggleFilterClicked={this.toggleFilterClicked}
+          img={girl}
+        >
+          <div className="col">
+            <p className="theme-dark-color">Release Year:</p>
+            <div className="mb-3 theme-dark-color">
+              <p>From</p>
+              <input
+                id="min-input"
+                className="form-control"
+                type="number"
+                placeholder="Min"
+                value={minRange}
+                onChange={this.updateRange}
+              />
             </div>
-          </Filter>
-        </div>
+            <div className="mb-3 theme-dark-color">
+              <p>To</p>
+              <input
+                id="max-input"
+                className="form-control"
+                type="number"
+                placeholder="Max"
+                value={maxRange}
+                onChange={this.updateRange}
+              />
+            </div>
+          </div>
+        </Head>
         <div id="body-content" className="mt-5 mb-5">
-          {table}
+          {bodyContent}
         </div>
         <Footer />
       </div>
@@ -261,37 +269,16 @@ const Films = ({ films, images, peopleImages }) => {
     );
   });
 
-  return <div className="faux-row-margin">{filmAry}</div>;
+  return (
+    <div className="faux-row-margin">
+      <div className="col-8 offset-2 border-bottom">{filmAry}</div>
+    </div>
+  );
 };
 
-class Film extends React.Component {
+class Film extends Table {
   constructor(props) {
     super(props);
-    this.state = {
-      showDetails: false,
-      chevronClicked: "fa-chevron-down",
-      borderBottom: "border-bottom-delay",
-      detailContainer: "detail-container-hidden"
-    };
-    this.toggleShowDetails = this.toggleShowDetails.bind(this);
-  }
-
-  toggleShowDetails() {
-    if (this.state.showDetails) {
-      this.setState({
-        showDetails: false,
-        chevronClicked: "fa-chevron-down",
-        borderBottom: "border-bottom-delay",
-        detailContainer: "detail-container-hidden"
-      });
-    } else {
-      this.setState({
-        showDetails: true,
-        chevronClicked: "fa-chevron-up",
-        borderBottom: "border-bottom-0",
-        detailContainer: "detail-container"
-      });
-    }
   }
 
   render() {
@@ -307,23 +294,19 @@ class Film extends React.Component {
       people,
       id
     } = this.props.film;
-    const { chevronClicked, borderBottom, detailContainer } = this.state;
+    const { chevronClicked, borderRules, detailContainer } = this.state;
     const image = images[title].default;
 
     return (
       <React.Fragment>
-        <div className="col-8 offset-2" key={id}>
-          <PreviewDetails
-            name={title}
-            borderBottom={borderBottom}
-            image={image}
-            chevronClicked={chevronClicked}
-            onClickHandler={this.toggleShowDetails}
-          />
-        </div>
-        <div
-          className={`${detailContainer} faux-row-margin pl-3 pr-3 col-8 offset-2`}
-        >
+        <PreviewDetails
+          name={title}
+          borderRules={borderRules}
+          image={image}
+          chevronClicked={chevronClicked}
+          onClickHandler={this.toggleShowDetails}
+        />
+        <div className={`${detailContainer} faux-row-margin pl-3 pr-3`}>
           <div className="row mb-2">
             <div className="col">
               <h5 className="underline">Description</h5>
@@ -359,3 +342,65 @@ class Film extends React.Component {
     );
   }
 }
+
+class Test extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.updateHey = this.updateHey.bind(this);
+  }
+
+  updateHey() {
+    this.setState({
+      hey: "updated"
+    });
+  }
+
+  render() {
+    console.log(this.props.children);
+    return (
+      <div>
+        <p>A test</p>
+        {this.props.children[1] || null}
+        {this.props.children[0] || this.props.children}
+      </div>
+    );
+  }
+}
+
+// class Test2 extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {};
+//   }
+
+//   render() {
+//     return (
+//       <div>
+//         <Test>
+//           <p>hey twice</p>
+//           {/* <p>hey</p> */}
+//         </Test>
+//         <p>my thing</p>
+//       </div>
+//     );
+//   }
+// }
+
+// class Test3 extends Test {
+//   constructor(props) {
+//     super(props);
+//   }
+
+//   render() {
+//     console.log(this.state);
+//     console.log(this.props);
+//     console.log(this.updateHey);
+//     console.log("test3");
+//     return (
+//       <div onClick={this.updateHey}>
+//         <p>hey</p>
+//       </div>
+//     );
+//   }
+// }

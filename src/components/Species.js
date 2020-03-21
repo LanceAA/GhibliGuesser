@@ -1,12 +1,13 @@
 import React from "react";
-import { Header } from "./reusable/Header.js";
-import { Searchbar } from "./reusable/Searchbar.js";
-import Filter from "./reusable/Filter.js";
+import Table from "./reusable/Table.js";
 import { PreviewDetails } from "./reusable/PreviewDetails.js";
 import { CharacterThumbnails } from "./reusable/CharacterThumbnails.js";
 import { AryToComponentAryTranslator } from "./reusable/AryToComponentAryTranslator.js";
 import { Footer } from "./reusable/Footer.js";
 import { NoContent } from "./reusable/NoContent.js";
+import { Loading } from "./reusable/Loading.js";
+import { Head } from "./reusable/Head.js";
+import girl from "../assets/girl.png";
 
 export default class SpeciesSearch extends React.Component {
   constructor(props) {
@@ -14,7 +15,6 @@ export default class SpeciesSearch extends React.Component {
     this.state = {
       search: "",
       species: [],
-      filteredSpecies: [],
       filters: {},
       activeFilters: {
         hair_colors: {},
@@ -44,11 +44,11 @@ export default class SpeciesSearch extends React.Component {
 
   filterSpecies() {
     const activeFilters = this.state.activeFilters;
-    const hasActiveEyeColors =
+    const actFilHasEyeColors =
       Object.values(activeFilters.eye_colors).find(
         eyeColorName => eyeColorName
       ) !== undefined;
-    const hasActiveHairColors =
+    const actFilHasHairColors =
       Object.values(activeFilters.hair_colors).find(
         hairColorName => hairColorName
       ) !== undefined;
@@ -62,9 +62,9 @@ export default class SpeciesSearch extends React.Component {
 
       return (
         (this.matchesActiveFilter(eyeColors, "eye_colors") ||
-          !hasActiveEyeColors) &&
+          !actFilHasEyeColors) &&
         (this.matchesActiveFilter(hairColors, "hair_colors") ||
-          !hasActiveHairColors) &&
+          !actFilHasHairColors) &&
         (nameMatchesSearch || this.state.search === "")
       );
     });
@@ -83,8 +83,6 @@ export default class SpeciesSearch extends React.Component {
     );
   }
 
-  checkKey(e) {}
-
   toggleFilterClicked(category, option) {
     let activeFilters = { ...this.state.activeFilters[category] };
 
@@ -101,7 +99,7 @@ export default class SpeciesSearch extends React.Component {
           [category]: activeFilters
         }
       },
-      this.filterFilms
+      this.filterSpecies
     );
   }
 
@@ -191,30 +189,40 @@ export default class SpeciesSearch extends React.Component {
 
   render() {
     console.log(this.state);
-    const { title, search, filters, filteredSpecies } = this.state;
-    const { images, peopleImages } = this.props;
+    const { search, filters } = this.state;
+    const { images, peopleImages, title } = this.props;
+    let bodyContent;
 
-    const table =
-      filteredSpecies.length > 0 ? (
-        <Species
-          images={images}
-          species={filteredSpecies}
-          peopleImages={peopleImages}
-        />
-      ) : (
-        <NoContent />
-      );
+    if (this.state.filteredSpecies) {
+      if (this.state.filteredSpecies.length > 0) {
+        bodyContent = (
+          <Species
+            images={images}
+            species={this.state.filteredSpecies}
+            peopleImages={peopleImages}
+          />
+        );
+      } else {
+        bodyContent = <NoContent />;
+      }
+    } else {
+      bodyContent = <Loading />;
+    }
+
+    // bodyContent = <Loading />;
 
     return (
-      <div className="container-fluid">
-        <Header title={title} />
-        <Searchbar search={search} onChangeHandler={this.updateSearch} />
-        <Filter
+      <div id="master-container" className="container-fluid">
+        <Head
+          title={title}
+          search={search}
+          updateSearch={this.updateSearch}
           filters={filters}
           toggleFilterClicked={this.toggleFilterClicked}
+          img={girl}
         />
         <div id="body-content" className="mt-5 mb-5">
-          {table}
+          {bodyContent}
         </div>
         <Footer />
       </div>
@@ -234,37 +242,16 @@ const Species = ({ species, images, peopleImages }) => {
     );
   });
 
-  return <div className="faux-row-margin">{speciesAry}</div>;
+  return (
+    <div className="faux-row-margin">
+      <div className="col-8 offset-2 border-bottom">{speciesAry}</div>
+    </div>
+  );
 };
 
-class SpeciesSingular extends React.Component {
+class SpeciesSingular extends Table {
   constructor(props) {
     super(props);
-    this.state = {
-      showDetails: false,
-      chevronClicked: "fa-chevron-down",
-      borderBottom: "border-bottom-delay",
-      detailContainer: "detail-container-hidden"
-    };
-    this.toggleShowDetails = this.toggleShowDetails.bind(this);
-  }
-
-  toggleShowDetails() {
-    if (this.state.showDetails) {
-      this.setState({
-        showDetails: false,
-        chevronClicked: "fa-chevron-down",
-        borderBottom: "border-bottom-delay",
-        detailContainer: "detail-container-hidden"
-      });
-    } else {
-      this.setState({
-        showDetails: true,
-        chevronClicked: "fa-chevron-up",
-        borderBottom: "border-bottom-0",
-        detailContainer: "detail-container"
-      });
-    }
   }
 
   render() {
@@ -279,23 +266,19 @@ class SpeciesSingular extends React.Component {
       films,
       id
     } = this.props.species;
-    const { chevronClicked, borderBottom, detailContainer } = this.state;
+    const { chevronClicked, borderRules, detailContainer } = this.state;
     const image = images[name].default;
 
     return (
       <React.Fragment>
-        <div className="col-8 offset-2" key={id}>
-          <PreviewDetails
-            name={name}
-            borderBottom={borderBottom}
-            image={image}
-            chevronClicked={chevronClicked}
-            onClickHandler={this.toggleShowDetails}
-          />
-        </div>
-        <div
-          className={`${detailContainer} faux-row-margin pl-3 pr-3 col-8 offset-2`}
-        >
+        <PreviewDetails
+          name={name}
+          borderRules={borderRules}
+          image={image}
+          chevronClicked={chevronClicked}
+          onClickHandler={this.toggleShowDetails}
+        />
+        <div className={`${detailContainer} faux-row-margin pl-3 pr-3`}>
           <div className="row mb-2">
             <div className="col">
               <h5 className="underline">Name</h5>

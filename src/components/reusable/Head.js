@@ -1,7 +1,29 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.css";
 
-export default class Filter extends React.Component {
+export const Head = ({
+  title,
+  search,
+  updateSearch,
+  toggleFilterClicked,
+  filters,
+  children,
+  img
+}) => {
+  return (
+    <div id="head" className="position-relative">
+      <Header title={title} />
+      <Searchbar search={search} onChangeHandler={updateSearch} />
+      <Filter filters={filters} toggleFilterClicked={toggleFilterClicked}>
+        {children}
+      </Filter>
+      <img className="head-img" src={img} />
+    </div>
+  );
+};
+
+class Filter extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -41,7 +63,7 @@ export default class Filter extends React.Component {
   render() {
     const { tabContainer, tab, tabItem, vectorIcon, menuDisplay } = this.state;
     return (
-      <div className="pb-3 theme-dark-bg faux-row-margin">
+      <div className="pb-3 theme-dark-bg faux-row-margin position-relative">
         <div className="row w-100">
           <div id={tabContainer} className="col-6 offset-3 pl-0">
             <div id={tab}>
@@ -114,4 +136,42 @@ const FilterOption = ({ options, rawCategory, clickHandler }) => {
       </li>
     );
   });
+};
+
+const Searchbar = ({ search, onChangeHandler }) => {
+  return (
+    <>
+      <div className="row pb-3 theme-dark-bg">
+        <div className="col-6 offset-3">
+          <input
+            id="searchbar"
+            type="text"
+            className="form-control"
+            placeholder="Search..."
+            value={search}
+            onChange={onChangeHandler}
+          />
+        </div>
+      </div>
+    </>
+  );
+};
+
+const Header = ({ title }) => {
+  return (
+    <>
+      <div className="row pb-4 theme-dark-bg">
+        <div className="col-1">
+          <Link className="mt-3 btn btn-outline-theme-dark" to="/">
+            Home
+          </Link>
+        </div>
+        <div className="col offset-1 mt-3 mb-4">
+          <h1 id="search-title" className="theme-dark-color">
+            {title}
+          </h1>
+        </div>
+      </div>
+    </>
+  );
 };

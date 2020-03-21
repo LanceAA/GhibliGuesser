@@ -9,6 +9,7 @@ import filmsThumbGif from "../assets/films-thumbnail-gif.gif";
 import speciesThumb from "../assets/species-thumbnail.png";
 import speciesThumbGif from "../assets/species-thumbnail-gif.gif";
 import { Link } from "react-router-dom";
+import { Footer } from "./reusable/Footer.js";
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -167,6 +168,7 @@ export default class Home extends React.Component {
               </div>
             </div>
           </div>
+          <Footer />
         </div>
       </>
     );

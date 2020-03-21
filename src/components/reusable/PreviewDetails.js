@@ -2,14 +2,14 @@ import React from "react";
 
 export const PreviewDetails = ({
   name,
-  borderBottom,
+  borderRules,
   image,
   chevronClicked,
   onClickHandler
 }) => {
   return (
     <div
-      className={`${borderBottom} row border pt-2 pb-2 align-items-center dim-on-hover cursor-pointer-on-hover`}
+      className={`row pt-2 pb-2 align-items-center dim-on-hover cursor-pointer-on-hover ${borderRules}`}
       onClick={onClickHandler}
     >
       <div className="col-1">

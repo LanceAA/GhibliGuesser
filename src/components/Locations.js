@@ -1,12 +1,13 @@
 import React from "react";
-import { Header } from "./reusable/Header.js";
-import { Searchbar } from "./reusable/Searchbar.js";
-import Filter from "./reusable/Filter.js";
+import Table from "./reusable/Table.js";
 import { PreviewDetails } from "./reusable/PreviewDetails.js";
 import { CharacterThumbnails } from "./reusable/CharacterThumbnails.js";
 import { AryToComponentAryTranslator } from "./reusable/AryToComponentAryTranslator.js";
 import { Footer } from "./reusable/Footer.js";
 import { NoContent } from "./reusable/NoContent.js";
+import { Loading } from "./reusable/Loading.js";
+import { Head } from "./reusable/Head.js";
+import girl from "../assets/girl.png";
 
 export default class LocationSearch extends React.Component {
   constructor(props) {
@@ -14,7 +15,6 @@ export default class LocationSearch extends React.Component {
     this.state = {
       search: "",
       locations: [],
-      filteredLocations: [],
       filters: {},
       activeFilters: {
         climate: {},
@@ -29,21 +29,23 @@ export default class LocationSearch extends React.Component {
 
   filterLocations() {
     const activeFilters = this.state.activeFilters;
-    const hasActiveClimate =
+    const actFilHasClimate =
       Object.values(activeFilters.climate).find(climateName => climateName) !==
       undefined;
-    const hasActiveTerrain =
+    const actFilHasTerrain =
       Object.values(activeFilters.terrain).find(terrainName => terrainName) !==
       undefined;
 
     const filteredLocations = this.state.locations.filter(location => {
+      const climateIsActive = activeFilters.climate[location.climate];
+      const terrainIsActive = activeFilters.terrain[location.terrain];
       const nameMatchesSearch =
         location.name.toLowerCase().indexOf(this.state.search.toLowerCase()) ===
         0;
 
       return (
-        (activeFilters.climate[location.climate] || !hasActiveClimate) &&
-        (activeFilters.terrain[location.terrain] || !hasActiveTerrain) &&
+        (climateIsActive || !actFilHasClimate) &&
+        (terrainIsActive || !actFilHasTerrain) &&
         (nameMatchesSearch || this.state.search === "")
       );
     });
@@ -171,32 +173,38 @@ export default class LocationSearch extends React.Component {
 
   render() {
     console.log(this.state);
-    const { search, filters, filteredLocations } = this.state;
+    const { search, filters } = this.state;
     const { title, images, peopleImages } = this.props;
+    let bodyContent;
 
-    const table =
-      filteredLocations.length > 0 ? (
-        <Locations
-          images={images}
-          locations={filteredLocations}
-          peopleImages={peopleImages}
-        />
-      ) : (
-        <NoContent />
-      );
+    if (this.state.filteredLocations) {
+      if (this.state.filteredLocations.length > 0) {
+        bodyContent = (
+          <Locations
+            images={images}
+            locations={this.state.filteredLocations}
+            peopleImages={peopleImages}
+          />
+        );
+      } else {
+        bodyContent = <NoContent />;
+      }
+    } else {
+      bodyContent = <Loading />;
+    }
 
     return (
-      <div className="container-fluid">
-        <div id="head">
-          <Header title={title} />
-          <Searchbar search={search} onChangeHandler={this.updateSearch} />
-          <Filter
-            filters={filters}
-            toggleFilterClicked={this.toggleFilterClicked}
-          />
-        </div>
+      <div id="master-container" className="container-fluid">
+        <Head
+          title={title}
+          search={search}
+          updateSearch={this.updateSearch}
+          filters={filters}
+          toggleFilterClicked={this.toggleFilterClicked}
+          img={girl}
+        />
         <div id="body-content" className="mt-5 mb-5">
-          {table}
+          {bodyContent}
         </div>
         <Footer />
       </div>
@@ -216,37 +224,16 @@ const Locations = ({ locations, images, peopleImages }) => {
     );
   });
 
-  return <div className="faux-row-margin">{locationsAry}</div>;
+  return (
+    <div className="faux-row-margin">
+      <div className="col-8 offset-2 border-bottom">{locationsAry}</div>
+    </div>
+  );
 };
 
-class Location extends React.Component {
+class Location extends Table {
   constructor(props) {
     super(props);
-    this.state = {
-      showDetails: false,
-      chevronClicked: "fa-chevron-down",
-      borderBottom: "border-bottom-delay",
-      detailContainer: "detail-container-hidden"
-    };
-    this.toggleShowDetails = this.toggleShowDetails.bind(this);
-  }
-
-  toggleShowDetails() {
-    if (this.state.showDetails) {
-      this.setState({
-        showDetails: false,
-        chevronClicked: "fa-chevron-down",
-        borderBottom: "border-bottom-delay",
-        detailContainer: "detail-container-hidden"
-      });
-    } else {
-      this.setState({
-        showDetails: true,
-        chevronClicked: "fa-chevron-up",
-        borderBottom: "border-bottom-0",
-        detailContainer: "detail-container"
-      });
-    }
   }
 
   render() {
@@ -258,27 +245,22 @@ class Location extends React.Component {
       terrain,
       surface_water,
       residents,
-      films,
-      id
+      films
     } = this.props.location;
-    const { chevronClicked, borderBottom, detailContainer } = this.state;
+    const { chevronClicked, borderRules, detailContainer } = this.state;
     const nameCopy = name === "Piccolo S.P.A." ? "Piccolo S" : name;
     const image = images[nameCopy].default;
 
     return (
       <React.Fragment>
-        <div className="col-8 offset-2" key={id}>
-          <PreviewDetails
-            name={name}
-            borderBottom={borderBottom}
-            image={image}
-            chevronClicked={chevronClicked}
-            onClickHandler={this.toggleShowDetails}
-          />
-        </div>
-        <div
-          className={`${detailContainer} faux-row-margin pl-3 pr-3 col-8 offset-2`}
-        >
+        <PreviewDetails
+          name={name}
+          borderRules={borderRules}
+          image={image}
+          chevronClicked={chevronClicked}
+          onClickHandler={this.toggleShowDetails}
+        />
+        <div className={`${detailContainer} faux-row-margin pl-3 pr-3`}>
           <div className="row mb-2">
             <div className="col">
               <h5 className="underline">Climate</h5>
