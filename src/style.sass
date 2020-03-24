@@ -1,5 +1,8 @@
 @import "../node_modules/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css"
 
+$brand-black: #242729
+$brand-gray: #bbc0c4
+
 @keyframes jump
   0%
     transform: translateY(0px)
@@ -46,9 +49,22 @@ input[type='number']
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button
   -webkit-appearance: none
+
+#tint
+  width: 100%
+  height: 100%
+  background-color: rgba(0, 0, 0, 0.2)
+
+#home-title
+  color: #fff
+  font-size: 5rem
+  -webkit-text-stroke-width: 2px
+  -webkit-text-stroke-color: #262626
   
 #background-top
-  background-color: #9e4dcd
+  //background-color: #9e4dcd
+  background-image: url("./assets/banner3.gif")
+  background-size: 100% 100%
   height: 447.5px
 
 #description-card
@@ -56,6 +72,7 @@ input::-webkit-inner-spin-button
   position: absolute
   left: calc(50% - 272px)
   top: 370px
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)
 
 #description-text
   color: #6c6a6a
@@ -87,9 +104,9 @@ input::-webkit-inner-spin-button
 #searchbar, 
 #max-input, 
 #min-input
-  background-color: #242729
-  border-color: #bbc0c4
-  color: #bbc0c4
+  background-color: $brand-black
+  border-color: $brand-gray
+  color: $brand-gray
   border-width: 0px 0px 1px 0px
   border-radius: 0
 
@@ -133,21 +150,17 @@ input::-webkit-inner-spin-button
   z-index: 3
   transition: border-color 0.4s
 
-#tab
-  margin-bottom: -1px
-
-#tab-item-active
-  border-color: #bbc0c4 #bbc0c4 #242729
-  border-width: 1px
+#filter-btn-active
+  border-width: 0px 0px 1px 0px
   border-style: solid
-  border-top-left-radius: .25rem
-  border-top-right-radius: .25rem
-  padding: .5rem 1rem
+  border-color: #dee2e6
+  padding: .35rem 1rem
 
-#tab-item
-  border: 1px solid #dee2e6
-  border-radius: .25rem
-  padding: .5rem 1rem
+#filter-btn
+  border-width: 0px 0px 1px 0px
+  border-style: solid
+  border-color: #dee2e6
+  padding: .35rem 1rem
   transition: border-color 1s
 
 #tabContent
@@ -162,17 +175,34 @@ input::-webkit-inner-spin-button
   margin-left: -15px
   margin-right: -15px
 
+.bg-inherit
+  background: inherit
+
 .filter-menu-hidden
   opacity: 0
   z-index: -1
   transform: translateY(-10px)
   transition: transform 0.4s, opacity 0.4s
+  top: 100%
+  left: 0
+  right: 0
+  margin-left: 15px
+  margin-right: 15px
+  padding-top: .25rem
+  padding-bottom: .25rem
 
 .filter-menu
   opacity: 1
   z-index: 2
   transform: translateY(0px)
   transition: transform 0.4s, opacity 0.4s
+  top: 100%
+  left: 0
+  right: 0
+  margin-left: 15px
+  margin-right: 15px
+  padding-top: .25rem
+  padding-bottom: .25rem
 
 .detail-container
   overflow: hidden
@@ -194,14 +224,14 @@ input::-webkit-inner-spin-button
 
 .dim-on-hover
   &:hover
-    background-color: #808588
+    background-color: lighten($brand-black, 20%)
     color: white
 
 .theme-dark-bg
-  background-color: #242729
+  background-color: $brand-black
 
 .theme-dark-color
-  color: #bbc0c4
+  color: $brand-gray
 
 div > .btn-outline-theme-dark
   color: #c2cbd3
@@ -263,3 +293,6 @@ div > .btn-outline-theme-dark:hover
   position: absolute
   bottom: 0
   right: 0
+
+#home-link
+  font-size: 1.1rem

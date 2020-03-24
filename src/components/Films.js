@@ -6,7 +6,7 @@ import { Footer } from "./reusable/Footer.js";
 import { NoContent } from "./reusable/NoContent.js";
 import { Loading } from "./reusable/Loading.js";
 import girl from "../assets/girl.png";
-import { Head } from "./reusable/Head.js";
+import Head from "./reusable/Head.js";
 
 export default class FilmSearch extends React.Component {
   constructor(props) {

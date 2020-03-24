@@ -72,9 +72,11 @@ export default class Home extends React.Component {
           </div>
         </div>
         <div className="container-fluid">
-          <div className="row" id="background-top">
-            <div className="col-4 offset-4 mt-4">
-              <img className="img-fluid" src={banner} />
+          <div className="faux-row-margin" id="background-top">
+            <div id="tint" className="d-flex justify-content-center">
+              <h1 id="home-title" className="pt-5">
+                Ghibli Guesser
+              </h1>
             </div>
           </div>
           <div className="row" id="category-thumbs">

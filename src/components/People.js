@@ -6,7 +6,7 @@ import { AryToComponentAryTranslator } from "./reusable/AryToComponentAryTransla
 import { Footer } from "./reusable/Footer.js";
 import { NoContent } from "./reusable/NoContent.js";
 import { Loading } from "./reusable/Loading.js";
-import { Head } from "./reusable/Head.js";
+import Head from "./reusable/Head.js";
 import girl from "../assets/girl.png";
 
 class PeopleSearch extends React.Component {
