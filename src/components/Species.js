@@ -7,7 +7,6 @@ import { Footer } from "./reusable/Footer.js";
 import { NoContent } from "./reusable/NoContent.js";
 import { Loading } from "./reusable/Loading.js";
 import Head from "./reusable/Head.js";
-import girl from "../assets/girl.png";
 
 export default class SpeciesSearch extends React.Component {
   constructor(props) {
@@ -193,7 +192,6 @@ export default class SpeciesSearch extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     const { search, filters, titleDropdownAry } = this.state;
     const { images, peopleImages, title } = this.props;
     let bodyContent;
@@ -214,7 +212,7 @@ export default class SpeciesSearch extends React.Component {
       bodyContent = <Loading />;
     }
 
-    //bodyContent = <Loading />;
+    // bodyContent = <Loading />;
 
     return (
       <div id="master-container" className="container-fluid">
@@ -224,7 +222,6 @@ export default class SpeciesSearch extends React.Component {
           updateSearch={this.updateSearch}
           filters={filters}
           toggleFilterClicked={this.toggleFilterClicked}
-          img={girl}
           titleDropdownAry={titleDropdownAry}
         />
         <div id="body-content" className="mt-5 mb-5">
@@ -261,7 +258,6 @@ class SpeciesSingular extends Table {
   }
 
   render() {
-    console.log(this.props);
     const { images, peopleImages } = this.props;
     const {
       name,

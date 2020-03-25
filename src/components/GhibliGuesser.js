@@ -36,14 +36,6 @@ export default class GhibliGuesser extends React.Component {
     this.state = {};
   }
 
-  componentDidMount() {
-    console.log("mounted here");
-  }
-
-  componentWillUnmount() {
-    console.log("unmounting here");
-  }
-
   render() {
     return (
       <Switch>

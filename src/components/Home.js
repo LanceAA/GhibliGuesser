@@ -1,5 +1,4 @@
 import React from "react";
-import banner from "../assets/banner.png";
 import peopleThumb from "../assets/people-thumbnail.png";
 import peopleThumbGif from "../assets/people-thumbnail-gif.gif";
 import locationsThumb from "../assets/locations-thumbnail.png";

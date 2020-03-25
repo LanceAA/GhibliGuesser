@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.css";
+import girl from "../../assets/girl.png";
 
 export default class Head extends React.Component {
   constructor(props) {
@@ -9,7 +10,7 @@ export default class Head extends React.Component {
       showMenu: false,
       showDropdownNav: false,
       vectorIcon: "fa-angle-down",
-      menuDisplay: "filter-menu-hidden",
+      menuDisplay: "filter-menu-hidden fade-out",
       filterBtn: "filter-btn",
       dropdownStatus: "fade-out dropdown-menu-hidden",
       titleVectorIcon: "fa-angle-down",
@@ -42,14 +43,14 @@ export default class Head extends React.Component {
       this.setState({
         showMenu: false,
         vectorIcon: "fa-angle-down",
-        menuDisplay: "filter-menu-hidden",
+        menuDisplay: "filter-menu-hidden fade-out",
         filterBtn: "filter-btn"
       });
     } else {
       this.setState({
         showMenu: true,
         vectorIcon: "fa-angle-up",
-        menuDisplay: "filter-menu",
+        menuDisplay: "filter-menu fade-in",
         filterBtn: "filter-btn-active"
       });
     }
@@ -74,7 +75,6 @@ export default class Head extends React.Component {
       titleVectorIcon,
       titleContainer
     } = this.state;
-    console.log(this.props);
 
     return (
       <div id="head" className="position-relative">
@@ -95,10 +95,6 @@ export default class Head extends React.Component {
             className={`col-sm-auto position-relative cursor-pointer-on-hover pb-2 ${titleContainer}`}
             onClick={this.toggleDropdownNav}
           >
-            {/* <div
-              className="cursor-pointer-on-hover"
-              onClick={this.toggleDropdownNav}
-            > */}
             <h1 id="search-title" className="theme-dark-color d-inline mr-3">
               {title}
             </h1>
@@ -106,7 +102,6 @@ export default class Head extends React.Component {
               id="title-vector"
               className={`fas ${titleVectorIcon} d-inline theme-dark-color d-inline`}
             ></i>
-            {/* </div> */}
             <div className={`dropdown-menu ${dropdownStatus} d-block m-0 pt-2`}>
               <DropdownItems ary={titleDropdownAry} />
             </div>
@@ -133,7 +128,7 @@ export default class Head extends React.Component {
               </div>
             </div>
             <div
-              className={`theme-dark-bg ${menuDisplay} d-flex justify-content-between position-absolute`}
+              className={`theme-dark-bg ${menuDisplay} d-flex justify-content-around position-absolute`}
             >
               <FilterOptions
                 filters={filters}
@@ -143,7 +138,7 @@ export default class Head extends React.Component {
             </div>
           </div>
         </div>
-        <img className="head-img" src={img} />
+        <img className="head-img" src={girl} />
       </div>
     );
   }

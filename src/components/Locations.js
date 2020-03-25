@@ -7,7 +7,6 @@ import { Footer } from "./reusable/Footer.js";
 import { NoContent } from "./reusable/NoContent.js";
 import { Loading } from "./reusable/Loading.js";
 import Head from "./reusable/Head.js";
-import girl from "../assets/girl.png";
 
 export default class LocationSearch extends React.Component {
   constructor(props) {
@@ -177,7 +176,6 @@ export default class LocationSearch extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     const { search, filters, titleDropdownAry } = this.state;
     const { title, images, peopleImages } = this.props;
     let bodyContent;
@@ -206,7 +204,6 @@ export default class LocationSearch extends React.Component {
           updateSearch={this.updateSearch}
           filters={filters}
           toggleFilterClicked={this.toggleFilterClicked}
-          img={girl}
           titleDropdownAry={titleDropdownAry}
         />
         <div id="body-content" className="mt-5 mb-5">
@@ -243,7 +240,6 @@ class Location extends Table {
   }
 
   render() {
-    console.log(this.props);
     const { images, peopleImages } = this.props;
     const {
       name,

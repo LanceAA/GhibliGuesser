@@ -5,7 +5,6 @@ import { CharacterThumbnails } from "./reusable/CharacterThumbnails.js";
 import { Footer } from "./reusable/Footer.js";
 import { NoContent } from "./reusable/NoContent.js";
 import { Loading } from "./reusable/Loading.js";
-import girl from "../assets/girl.png";
 import Head from "./reusable/Head.js";
 
 export default class FilmSearch extends React.Component {
@@ -204,7 +203,6 @@ export default class FilmSearch extends React.Component {
       titleDropdownAry
     } = this.state;
     const { images, title, peopleImages } = this.props;
-    console.log(this.state);
     let bodyContent;
 
     if (this.state.filteredFilms) {
@@ -231,7 +229,6 @@ export default class FilmSearch extends React.Component {
           updateSearch={this.updateSearch}
           filters={filters}
           toggleFilterClicked={this.toggleFilterClicked}
-          img={girl}
           titleDropdownAry={titleDropdownAry}
         >
           <div className="col">
@@ -294,7 +291,6 @@ class Film extends Table {
   }
 
   render() {
-    console.log(this.props);
     const { images, peopleImages } = this.props;
     const {
       description,
@@ -354,65 +350,3 @@ class Film extends Table {
     );
   }
 }
-
-class Test extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-    this.updateHey = this.updateHey.bind(this);
-  }
-
-  updateHey() {
-    this.setState({
-      hey: "updated"
-    });
-  }
-
-  render() {
-    console.log(this.props.children);
-    return (
-      <div>
-        <p>A test</p>
-        {this.props.children[1] || null}
-        {this.props.children[0] || this.props.children}
-      </div>
-    );
-  }
-}
-
-// class Test2 extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {};
-//   }
-
-//   render() {
-//     return (
-//       <div>
-//         <Test>
-//           <p>hey twice</p>
-//           {/* <p>hey</p> */}
-//         </Test>
-//         <p>my thing</p>
-//       </div>
-//     );
-//   }
-// }
-
-// class Test3 extends Test {
-//   constructor(props) {
-//     super(props);
-//   }
-
-//   render() {
-//     console.log(this.state);
-//     console.log(this.props);
-//     console.log(this.updateHey);
-//     console.log("test3");
-//     return (
-//       <div onClick={this.updateHey}>
-//         <p>hey</p>
-//       </div>
-//     );
-//   }
-// }

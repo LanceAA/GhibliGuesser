@@ -7,7 +7,6 @@ import { Footer } from "./reusable/Footer.js";
 import { NoContent } from "./reusable/NoContent.js";
 import { Loading } from "./reusable/Loading.js";
 import Head from "./reusable/Head.js";
-import girl from "../assets/girl.png";
 
 class PeopleSearch extends React.Component {
   constructor(props) {
@@ -233,7 +232,6 @@ class PeopleSearch extends React.Component {
           updateSearch={this.updateSearch}
           filters={filters}
           toggleFilterClicked={this.toggleFilterClicked}
-          img={girl}
           titleDropdownAry={titleDropdownAry}
         />
         <div id="body-content" className="mt-5 mb-5">
@@ -296,7 +294,6 @@ class Person extends Table {
   }
 
   render() {
-    console.log(this.props);
     const {
       name,
       id,
