@@ -20,7 +20,12 @@ export default class FilmSearch extends React.Component {
         producer: {}
       },
       minRange: "",
-      maxRange: ""
+      maxRange: "",
+      titleDropdownAry: [
+        { name: "People", path: "/people" },
+        { name: "Locations", path: "/locations" },
+        { name: "Species", path: "/species" }
+      ]
     };
     this.updateSearch = this.updateSearch.bind(this);
     this.toggleFilterClicked = this.toggleFilterClicked.bind(this);
@@ -191,7 +196,13 @@ export default class FilmSearch extends React.Component {
   }
 
   render() {
-    const { search, filters, minRange, maxRange } = this.state;
+    const {
+      search,
+      filters,
+      minRange,
+      maxRange,
+      titleDropdownAry
+    } = this.state;
     const { images, title, peopleImages } = this.props;
     console.log(this.state);
     let bodyContent;
@@ -221,6 +232,7 @@ export default class FilmSearch extends React.Component {
           filters={filters}
           toggleFilterClicked={this.toggleFilterClicked}
           img={girl}
+          titleDropdownAry={titleDropdownAry}
         >
           <div className="col">
             <p className="theme-dark-color">Release Year:</p>

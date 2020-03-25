@@ -19,7 +19,12 @@ export default class LocationSearch extends React.Component {
       activeFilters: {
         climate: {},
         terrain: {}
-      }
+      },
+      titleDropdownAry: [
+        { name: "People", path: "/people" },
+        { name: "Species", path: "/species" },
+        { name: "Films", path: "/films" }
+      ]
     };
     this.updateSearch = this.updateSearch.bind(this);
     this.toggleFilterClicked = this.toggleFilterClicked.bind(this);
@@ -173,7 +178,7 @@ export default class LocationSearch extends React.Component {
 
   render() {
     console.log(this.state);
-    const { search, filters } = this.state;
+    const { search, filters, titleDropdownAry } = this.state;
     const { title, images, peopleImages } = this.props;
     let bodyContent;
 
@@ -202,6 +207,7 @@ export default class LocationSearch extends React.Component {
           filters={filters}
           toggleFilterClicked={this.toggleFilterClicked}
           img={girl}
+          titleDropdownAry={titleDropdownAry}
         />
         <div id="body-content" className="mt-5 mb-5">
           {bodyContent}

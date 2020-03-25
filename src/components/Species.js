@@ -19,7 +19,12 @@ export default class SpeciesSearch extends React.Component {
       activeFilters: {
         hair_colors: {},
         eye_colors: {}
-      }
+      },
+      titleDropdownAry: [
+        { name: "People", path: "/people" },
+        { name: "Locations", path: "/locations" },
+        { name: "Films", path: "/films" }
+      ]
     };
     this.updateSearch = this.updateSearch.bind(this);
     this.toggleFilterClicked = this.toggleFilterClicked.bind(this);
@@ -189,7 +194,7 @@ export default class SpeciesSearch extends React.Component {
 
   render() {
     console.log(this.state);
-    const { search, filters } = this.state;
+    const { search, filters, titleDropdownAry } = this.state;
     const { images, peopleImages, title } = this.props;
     let bodyContent;
 
@@ -220,6 +225,7 @@ export default class SpeciesSearch extends React.Component {
           filters={filters}
           toggleFilterClicked={this.toggleFilterClicked}
           img={girl}
+          titleDropdownAry={titleDropdownAry}
         />
         <div id="body-content" className="mt-5 mb-5">
           {bodyContent}

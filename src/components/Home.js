@@ -34,11 +34,10 @@ export default class Home extends React.Component {
         }
       }
     };
-    this.test = this.test.bind(this);
-    this.testExit = this.testExit.bind(this);
+    this.switchImage = this.switchImage.bind(this);
   }
 
-  test({ target }) {
+  switchImage({ target }) {
     const title = target.dataset.title;
     this.setState({
       images: {
@@ -48,12 +47,6 @@ export default class Home extends React.Component {
           stored: this.state.images[title].current
         }
       }
-    });
-  }
-
-  testExit() {
-    this.setState({
-      image: filmsThumb
     });
   }
 
@@ -83,8 +76,8 @@ export default class Home extends React.Component {
             <div className="col-2 offset-3 mb-5">
               <div
                 className="card category-thumb"
-                onMouseEnter={this.test}
-                onMouseLeave={this.test}
+                onMouseEnter={this.switchImage}
+                onMouseLeave={this.switchImage}
                 data-title={"people"}
               >
                 <Link to="/people" className="remove-anchor-styling">
@@ -105,8 +98,8 @@ export default class Home extends React.Component {
             <div className="col-2 offset-2 mb-5">
               <div
                 className="card category-thumb"
-                onMouseEnter={this.test}
-                onMouseLeave={this.test}
+                onMouseEnter={this.switchImage}
+                onMouseLeave={this.switchImage}
                 data-title={"locations"}
               >
                 <Link to="/locations" className="remove-anchor-styling">
@@ -128,8 +121,8 @@ export default class Home extends React.Component {
             <div className="col-2 offset-3">
               <div
                 className="card category-thumb"
-                onMouseEnter={this.test}
-                onMouseLeave={this.test}
+                onMouseEnter={this.switchImage}
+                onMouseLeave={this.switchImage}
                 data-title={"films"}
               >
                 <Link to="/films" className="remove-anchor-styling">
@@ -150,8 +143,8 @@ export default class Home extends React.Component {
             <div className="col-2 offset-2">
               <div
                 className="card category-thumb"
-                onMouseEnter={this.test}
-                onMouseLeave={this.test}
+                onMouseEnter={this.switchImage}
+                onMouseLeave={this.switchImage}
                 data-title={"species"}
               >
                 <Link to="/species" className="remove-anchor-styling">

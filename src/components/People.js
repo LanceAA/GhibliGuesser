@@ -22,7 +22,12 @@ class PeopleSearch extends React.Component {
         films: {},
         gender: {},
         hair_color: {}
-      }
+      },
+      titleDropdownAry: [
+        { name: "Locations", path: "/locations" },
+        { name: "Species", path: "/species" },
+        { name: "Films", path: "/films" }
+      ]
     };
     this.toggleFilterClicked = this.toggleFilterClicked.bind(this);
     this.filterPeople = this.filterPeople.bind(this);
@@ -197,7 +202,7 @@ class PeopleSearch extends React.Component {
   }
 
   render() {
-    const { filters, search, scrollFocus } = this.state;
+    const { filters, search, scrollFocus, titleDropdownAry } = this.state;
     const { title, images } = this.props;
     const scrollToId = this.props.location.pathname.split("/people/")[1];
     let bodyContent;
@@ -229,6 +234,7 @@ class PeopleSearch extends React.Component {
           filters={filters}
           toggleFilterClicked={this.toggleFilterClicked}
           img={girl}
+          titleDropdownAry={titleDropdownAry}
         />
         <div id="body-content" className="mt-5 mb-5">
           {bodyContent}
