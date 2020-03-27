@@ -91,6 +91,7 @@ export default class Head extends React.Component {
           </div>
         </div>
         <div className="row theme-dark-bg justify-content-center pb-5">
+          {/* make this d-flex and center vector */}
           <div
             className={`col-sm-auto position-relative cursor-pointer-on-hover pb-2 ${titleContainer}`}
             onClick={this.toggleDropdownNav}
@@ -98,10 +99,12 @@ export default class Head extends React.Component {
             <h1 id="search-title" className="theme-dark-color d-inline mr-3">
               {title}
             </h1>
-            <i
-              id="title-vector"
-              className={`fas ${titleVectorIcon} d-inline theme-dark-color d-inline`}
-            ></i>
+            <div className="h-100 d-inline-block">
+              <i
+                id="title-vector"
+                className={`fas ${titleVectorIcon} d-inline theme-dark-color`}
+              ></i>
+            </div>
             <div className={`dropdown-menu ${dropdownStatus} d-block m-0 pt-2`}>
               <DropdownItems ary={titleDropdownAry} />
             </div>
